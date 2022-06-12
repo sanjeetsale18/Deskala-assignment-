@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 const app = express();
 
 // port assign
-const port = 3001;
+const port = 3002;
 
 // routes
 const routes = require("./Routes/index");

@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-// creating a user schema
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -10,15 +9,8 @@ const userSchema = new mongoose.Schema(
       default: "",
       validate: (value) => validator.isEmail(value),
     },
-    phoneNo: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
+    phoneNo: { type: Number, required: true, default: 0 },
+    password: { type: String, required: true },
   },
   {
     timestamps: true,

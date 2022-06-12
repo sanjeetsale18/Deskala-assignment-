@@ -1,8 +1,8 @@
 const User = require("../Model/userModel");
 const bcrypt = require("bcrypt");
 
-class userServices {
-  // to create the user
+class userService {
+  // to create the users
   create = async (body) => {
     const hasedPassword = await this.encryptPassword(body.password);
     const newUser = new User({ ...body, password: hasedPassword });
@@ -10,22 +10,22 @@ class userServices {
     return result;
   };
 
-  //   to find the user in the database
+  //    to find the users
   findUser = async (userID) => {
-    const allUser = await User.findOne({ id: userID });
-    return allUser;
+    const allUsers = await User.findOne({ id: userID });
   };
 
-  // to encrypt the password
+  //   to encrypt the password
   encryptPassword = async (password) => {
-    const salt = await bcrypt.genSalt(password);
+    const salt = await bcrypt.genSalt();
     const hasedPassword = await bcrypt.hash(password, salt);
     return hasedPassword;
   };
 
-  //   to check the login state
+  // to check the login state of
   login = async (email, password) => {
     try {
+      // const encrypt = await this.encryptPassword(password);
       const user = await User.find({ email, password });
       if (!user) return null;
       return { isLoggedIn: true, ...user };
@@ -35,4 +35,4 @@ class userServices {
   };
 }
 
-module.exports = userServices;
+module.exports = userService;
