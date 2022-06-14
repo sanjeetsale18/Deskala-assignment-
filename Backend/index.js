@@ -6,6 +6,9 @@ const express = require("express");
 // Mongoose import
 const mongoose = require("mongoose");
 
+// cros import
+const cros = require("cros");
+
 // App creation
 const app = express();
 
@@ -28,6 +31,9 @@ mongoose
   .catch((error) => {
     console.log(error.message);
   });
+
+// applying a cros to resolve the same-origin error
+app.use(cros());
 
 // Express Json
 app.use(express.json());

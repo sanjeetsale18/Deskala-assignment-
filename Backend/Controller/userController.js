@@ -36,6 +36,10 @@ const checkLogIn = async (req, res) => {
     const { email, password } = req.body;
     const loginResult = await UserServiceInstance.login(email, password);
     if (loginResult.isLoggedIn) {
+      res.cookie("token", loginResult.jwt, {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+      })
       res.json(loginResult);
     } else {
       res.status(403).json({ message: "Invalid Credentials" });

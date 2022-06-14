@@ -1,5 +1,6 @@
 const User = require("../Model/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 class userService {
   // to create the users
@@ -43,13 +44,28 @@ class userService {
     }
   };
 
+  secret = process.env.SECRET;
+
+  // generate tokens using a jwt/jsonwebtoken
+  generateToken = (userId) => {
+    try {
+      const payload = { userId };
+      const options = { expiresIn: "1h" };
+      const token = jwt.sign(payload, this.secret, options);
+      return token;
+    } catch (err) {
+      throw err;
+    }
+  };
+
   // to check the login state of
   login = async (email, password) => {
     try {
       // const encrypt = await this.encryptPassword(password);
       const user = await this.verifyCredentials(email, password);
       if (user) {
-        return { isLoggedIn: true, ...user };
+        const token = this.generateToken(user._id);
+        return { isLoggedIn: true, jwt: token, userID: user._id };
       } else {
         return { isLoggedIn: false };
       }
