@@ -15,6 +15,12 @@ class userService {
     const allUsers = await User.findOne({ id: userID });
   };
 
+  // find user using the email
+  // findUserByEmail = async (email) => {
+  //   const user = await User.findOne({ email });
+  //   return user;
+  // };
+
   //   to encrypt the password
   encryptPassword = async (password) => {
     const salt = await bcrypt.genSalt();
@@ -22,13 +28,31 @@ class userService {
     return hasedPassword;
   };
 
+  // verfiying the credentials
+  verifyCredentials = async (email, password) => {
+    try {
+      const user = await User.findOne({ email });
+      const valid = await bcrypt.compare(password, user.password);
+      if (valid) {
+        return user;
+      } else {
+        return null;
+      }
+    } catch (err) {
+      throw err;
+    }
+  };
+
   // to check the login state of
   login = async (email, password) => {
     try {
       // const encrypt = await this.encryptPassword(password);
-      const user = await User.find({ email, password });
-      if (!user) return null;
-      return { isLoggedIn: true, ...user };
+      const user = await this.verifyCredentials(email, password);
+      if (user) {
+        return { isLoggedIn: true, ...user };
+      } else {
+        return { isLoggedIn: false };
+      }
     } catch (err) {
       console.log(err);
     }
