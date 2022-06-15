@@ -12,8 +12,13 @@ class userService {
   };
 
   //    to find the users
-  findUser = async (userID) => {
-    const allUsers = await User.findOne({ id: userID });
+  findById = async (userId) => {
+    try {
+      const result = await User.findById(userId);
+      return result;
+    } catch (err) {
+      throw err;
+    }
   };
 
   // find user using the email
@@ -65,7 +70,7 @@ class userService {
       const user = await this.verifyCredentials(email, password);
       if (user) {
         const token = this.generateToken(user._id);
-        return { isLoggedIn: true, jwt: token, userID: user._id };
+        return { isLoggedIn: true, jwt: token, userId: user._id };
       } else {
         return { isLoggedIn: false };
       }

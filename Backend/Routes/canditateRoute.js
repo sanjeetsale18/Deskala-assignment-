@@ -1,4 +1,5 @@
 const route = require("express").Router();
+const passport = require("passport");
 const { canditateValidate } = require("../Validator/canditateValidator");
 
 const {
@@ -7,8 +8,11 @@ const {
   updateById,
 } = require("../Controller/canditateController");
 
-route.post("/new", canditateValidate, createCandidate);
-route.delete("/:id", deleteById);
-route.patch("/:id", updateById);
+// adding a token authentication using passport
+const authenticate = passport.authenticate("jwt", { session: false });
+
+route.post("/new", authenticate, canditateValidate, createCandidate);
+route.delete("/:id", authenticate, deleteById);
+route.patch("/:id", authenticate, updateById);
 
 module.exports = route;

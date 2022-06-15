@@ -7,7 +7,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 // cros import
-const cros = require("cros");
+const cors = require("cors");
+
+// workspaceip import
+const config = require("./ipConfig.json");
+
+// import passort libary to auth the token
+const passport = require("passport");
+const jwtStrategy = require("./Config/passport");
 
 // App creation
 const app = express();
@@ -32,11 +39,22 @@ mongoose
     console.log(error.message);
   });
 
-// applying a cros to resolve the same-origin error
-app.use(cros());
-
 // Express Json
 app.use(express.json());
+
+// using the passport strategy
+
+app.use(passport.initialize());
+passport.use("jwt", jwtStrategy);
+
+// applying a cros to resolve the same-origin error
+app.use(
+  cors({
+    origin: `http://${config.workspaceIp}:${process.env.FRONTEND_PORT}`,
+    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept",
+    credentials: true,
+  })
+);
 
 // v1 routes
 app.use("/v1", routes);
